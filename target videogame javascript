@@ -1,0 +1,90 @@
+var ball;
+var dx = 8;
+var dy = 8;
+var line;
+var line2;
+var circle;
+/* This program has a ball bounce around the screen. */
+function start(){
+    
+    
+    line = new Line(0,getHeight()/2, getWidth(),getHeight()/2);
+    line.setLineWidth(3);
+    add(line);
+    line2 = new Line(getWidth()/2,0, getWidth()/2,getHeight());
+    line2.setLineWidth(3);
+    add(line2);
+    
+    
+    
+    
+    ball = new Circle(20);
+	ball.setPosition(100, 100);
+	ball.setColor(Color.red);
+	add(ball);
+	
+
+    
+   	mouseMoveMethod(crosshairs);
+	mouseClickMethod(shoot);
+    setTimer(draw, 20);
+
+}
+function crosshairs(e){
+    line.setEndpoint(e.getX(),getHeight());
+    line.setPosition(e.getX(),0);
+    line2.setEndpoint(getWidth(),e.getY());
+    line2.setPosition(0,e.getY());
+   
+}
+function shoot(e){
+    var elem = getElementAt(e.getX(), e.getY());
+   if (elem == ball){
+       remove(ball);
+   }
+    
+    circle= new Circle(10);
+    
+    circle.setPosition(e.getX(), e.getY());
+    circle.setColor(Color.black);
+    add(circle);
+}
+
+
+/*function targetLines(){
+    var horzLine = new Line(0,getHeight()/2, getWidth(),getHeight()/2);
+    horzLine.setLineWidth(3);
+    add(horzLine);
+    var vertLine = new Line(getWidth()/2,0, getWidth()/2,getHeight());
+    vertLine.setLineWidth(3);
+    add(vertLine);
+}*/
+
+
+function draw(){
+	checkWalls();
+	ball.move(dx, dy);
+
+}
+
+function checkWalls(){
+	// Bounce off right wall
+	if(ball.getX() + ball.getRadius() > getWidth()){
+		dx = -dx;
+	}
+	
+	// Bounce off left wall
+	if(ball.getX() - ball.getRadius() < 0){
+		dx = -dx;
+	}
+	
+	// Bounce off bottom wall
+	if(ball.getY() + ball.getRadius() > getHeight()){
+		dy = -dy;
+	}
+	
+	// Bounce off top wall
+	if(ball.getY() - ball.getRadius() < 0){
+		dy = -dy;
+	}
+}
