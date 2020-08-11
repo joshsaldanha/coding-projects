@@ -1,0 +1,69 @@
+var MAX_BOUNCES = 50;
+var pattern;
+var ball;
+var dx = 6;
+var dy = 8;
+var trailX;
+var trailY;
+var bounceCounter = 0;
+
+/* This program has a ball bounce around the screen. 
+ * It's path is drawn by drawing different colored balls everywhere it goes.
+ */
+function start(){
+	ball = new Circle(20);
+	ball.setPosition(100, 100);
+	add(ball);
+	
+	setTimer(draw, 20);
+}
+
+function draw(){
+	checkWalls();
+	trailX = ball.getX();
+	trailY = ball.getY();
+	
+	ball.move(dx, dy);
+	drawTrail(trailX,trailY);
+	if(bounceCounter > MAX_BOUNCES){
+	    stopTimer(draw);
+	}
+}
+function drawCircle(x,y,radius,color){
+    var circle = new Circle(radius);
+    circle.setPosition(x,y);
+    circle.setColor(color);
+
+}
+function checkWalls(){
+	// Bounce off right wall
+	if(ball.getX() + ball.getRadius() > getWidth()){
+		dx = -dx;
+		bounceCounter++;
+	}
+	
+	// Bounce off left wall
+	if(ball.getX() - ball.getRadius() < 0){
+		dx = -dx;
+		bounceCounter++;
+	}
+	
+	// Bounce off bottom wall
+	if(ball.getY() + ball.getRadius() > getHeight()){
+		dy = -dy;
+		bounceCounter++;
+	}
+	
+	// Bounce off top wall
+	if(ball.getY() - ball.getRadius() < 0){
+		dy = -dy;
+		bounceCounter++;
+	}
+	
+}
+function drawTrail(zx,zy){
+    pattern = new Circle(15);
+    pattern.setPosition(zx,zy);
+    pattern.setColor(Color.cyan);
+    add(pattern);
+}
