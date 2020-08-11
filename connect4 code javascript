@@ -1,0 +1,112 @@
+var NUM_COLS = 7;
+var NUM_ROWS = 6;
+var CIRCLE_RADIUS=getWidth()/(NUM_COLS*2);
+var RED=Color.red;
+var YELLW=Color.yellow;
+var counter=0;
+var grid;
+var col=0;
+var player=0;
+var val= 1;
+var val2= 2;
+//Put your constants here!
+
+function start(){
+    //put your code here!
+    grid = new Grid(NUM_ROWS, NUM_COLS);
+    grid.init(0);
+    makeBoard();
+    mouseClickMethod(whenClicked);
+}
+function makeBoard(){
+    
+    var background=new Rectangle(CIRCLE_RADIUS*2*NUM_COLS,CIRCLE_RADIUS*2*NUM_ROWS );
+    background.setColor(Color.blue);
+    background.setPosition(0,0);
+    add(background);
+    for(var i =0; i<NUM_COLS;i++){
+        for(var o =0; o<NUM_ROWS;o++){
+            var circ= new Circle(CIRCLE_RADIUS);
+            circ.setPosition(CIRCLE_RADIUS+(CIRCLE_RADIUS*i*2),CIRCLE_RADIUS+(CIRCLE_RADIUS*o*2));
+            circ.setColor(Color.white);
+            add(circ);
+        }
+    }
+}
+function whenClicked(e){
+   
+    var elem=e.getX();
+    for(var x = 0; x<NUM_COLS;x++){
+        if((CIRCLE_RADIUS*2)*(x-1)<elem){
+            if((CIRCLE_RADIUS*2)*(x+1)>elem){
+                pieceColor(x);
+                break;
+            }
+        }
+    }
+}
+
+function pieceColor(col){
+    for(var row = NUM_ROWS-1 ; row >= 0; row--){
+            if(grid.get(row, col) == 0){
+            counter++;
+            if(counter%2==0){
+                var color=RED;
+                var turn=2;
+            }else{
+                var color=YELLW;
+                var turn=1;
+            }
+            grid.set(row,col,turn);
+            var circle = new Circle(CIRCLE_RADIUS);
+            circle.setColor(color);
+            circle.setPosition((col * 2 * CIRCLE_RADIUS) + CIRCLE_RADIUS, (row * 2 * CIRCLE_RADIUS) + CIRCLE_RADIUS);
+            add(circle);
+            break;
+
+        }
+         
+       }
+    checkWinner();
+}
+
+function printVicMessage(text, color) {
+    var text = new Text(text, "20pt Arial");
+    text.setPosition(getWidth()/3,getHeight()/3);
+    text.setColor(color);
+    add(text);
+}
+function checkWinner(){
+    if(checkWin(val)) {
+        removeAll();
+        printVicMessage("Yellow wins!", Color.yellow);
+    }
+    if(checkWin(val2)) {
+        removeAll();
+        printVicMessage("Red wins!", Color.red);
+    }
+}
+function checkWin(coin){
+    for(var col = 0 ; col < NUM_COLS - 3 ;col++){
+        for(var row = 0; row < NUM_ROWS; row++){
+            if(grid.get(row,col) == coin && grid.get(row,col + 1)== coin && grid.get(row, col + 2) == coin && grid.get(row, col + 3) == coin) {
+                return true;
+            }
+        }
+    }
+    for(var row = 0; row < NUM_ROWS - 3; row++){
+        for(var col = 0 ; col < NUM_COLS;col++){
+             if(grid.get(row,col) == coin && grid.get(row+1,col)== coin && grid.get(row+2, col) == coin && grid.get(row+3, col) == coin) {
+                return true;
+             }
+        }
+    }
+    for(var row = 0; row<NUM_ROWS-3; row++){
+        for(var col = 0; col<NUM_COLS-3;col++){
+            if(grid.get(row,col)==coin && grid.get(row+1,col+1)==coin && grid.get(row+2,col+2)==coin && grid.get(row+3,col+3)==coin){
+                return true;
+            }
+        }
+    }
+
+}
